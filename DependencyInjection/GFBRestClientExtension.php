@@ -25,7 +25,10 @@ class GFBRestClientExtension extends Extension
         
 //        $container->setParameter('gfb.rest_client.config.', $config['foo']);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader(
+            $container,
+            new FileLocator(__DIR__.'/../Resources/config')
+        );
         $loader->load('services.yml');
     }
 }
