@@ -25,10 +25,5 @@
     "psr-4": {
       "GFB\\RestClientBundle\\": ""
     }
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.0-dev"
-    }
   }
 }
