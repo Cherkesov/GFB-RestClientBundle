@@ -7,7 +7,7 @@ class User
 {
     /**
      * @var integer
-     * @Serialize\SerializedName("id")
+     * @Serialize\SerializedName("uid")
      * @Serialize\Type(name="integer")
      */
     private $id;
@@ -29,6 +29,7 @@ class User
     /**
      * @var City
      * @Serialize\Type("GFB\RestClientBundle\Rest\Vkontakte\Model\City")
+     * @Serialize\Type("integer")
      */
     private $city;
 
@@ -38,6 +39,13 @@ class User
      * @Serialize\Type(name="string")
      */
     private $photo50;
+
+    /**
+     * @var string
+     * @Serialize\SerializedName("photo_200")
+     * @Serialize\Type(name="string")
+     */
+    private $photo200;
 
     /**
      * @return int
@@ -130,6 +138,25 @@ class User
     public function setPhoto50($photo50)
     {
         $this->photo50 = $photo50;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoto200()
+    {
+        return $this->photo200;
+    }
+
+    /**
+     * @param string $photo200
+     * @return User
+     */
+    public function setPhoto200($photo200)
+    {
+        $this->photo200 = $photo200;
 
         return $this;
     }

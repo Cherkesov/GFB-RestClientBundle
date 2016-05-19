@@ -6,20 +6,26 @@ use GFB\RestClientBundle\ApiMethodDescriptionInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use JMS\Serializer\Serializer;
+use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RestClientBase
 {
     /** @var Serializer */
     private $serializer;
+    
+    /** @var Logger */
+    private $logger;
 
     /**
      * RequestHttpClient constructor.
      * @param Serializer $serializer
+     * @param Logger $logger
      */
-    public function __construct(Serializer $serializer)
+    public function __construct(Serializer $serializer, Logger $logger)
     {
         $this->serializer = $serializer;
+        $this->logger = $logger;
     }
 
     /**

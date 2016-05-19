@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: scherk01
- * Date: 18.05.2016
- * Time: 16:19
- */
-
 namespace GFB\RestClientBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;

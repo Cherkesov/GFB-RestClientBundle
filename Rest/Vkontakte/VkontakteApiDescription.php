@@ -1,9 +1,9 @@
 <?php
 namespace GFB\RestClientBundle\Rest\Vkontakte;
 
-use GFB\RestClientBundle\ApiHostDescriptionInterface;
+use GFB\RestClientBundle\AbstractApiHostDescription;
 
-class VkontakteApiDescription implements ApiHostDescriptionInterface
+class VkontakteApiDescription extends AbstractApiHostDescription
 {
     /**
      * @return string
@@ -19,5 +19,14 @@ class VkontakteApiDescription implements ApiHostDescriptionInterface
     public function getDataFormat()
     {
         return self::DATA_FORMAT_JSON;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function preDeserialize($rawData)
+    {
+        $rawData = json_decode($rawData, true)['response'];
+        return json_encode($rawData);
     }
 }

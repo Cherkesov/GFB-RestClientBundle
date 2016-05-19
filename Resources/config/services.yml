@@ -8,12 +8,17 @@ services:
 #            - { name: twig.extension }
 #            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 
-#    gfb.rest_client.base:
-#        class: GFB\RestClientBundle\Service\RequestHttpClient
-#        arguments:
-#            - @serializer
+    gfb.rest_client.logger:
+        class: Symfony\Bridge\Monolog\Logger
+        arguments: [directcrm]
+        calls:
+            - [pushHandler, ["@gfb.rest_client.monolog.handler"]]
+    gfb.rest_client.monolog.handler:
+        class: Monolog\Handler\StreamHandler
+        arguments: [%kernel.logs_dir%/gfb/remote-calls.log]
 
-    gfb.rest_client.vkontakte:
-        class: GFB\RestClientBundle\Rest\Vkontakte\VkontakteRestClient
+    gfb.rest_client.base:
+        class: GFB\RestClientBundle\Service\RestClientBase
         arguments:
             - @serializer
+            - @gfb.rest_client.logger

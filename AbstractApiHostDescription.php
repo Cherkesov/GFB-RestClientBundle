@@ -1,15 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: scherk01
- * Date: 19.05.2016
- * Time: 16:06
- */
-
 namespace GFB\RestClientBundle;
 
-
-class AbstractApiHostDescription
+abstract class AbstractApiHostDescription implements ApiHostDescriptionInterface
 {
-
+    /**
+     * @param string $rawData
+     * @return string
+     */
+    public function preDeserialize($rawData)
+    {
+        return $rawData;
+    }
 }

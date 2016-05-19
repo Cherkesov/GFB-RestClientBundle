@@ -30,6 +30,11 @@ interface ApiMethodDescriptionInterface
     public function getParametersAllowedTypes();
 
     /**
+     * @return array
+     */
+    public function getParametersAllowedValues();
+
+    /**
      * @return string
      */
     public function getResultModelType();
