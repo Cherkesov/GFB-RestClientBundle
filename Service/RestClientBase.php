@@ -13,7 +13,7 @@ class RestClientBase
 {
     /** @var Serializer */
     private $serializer;
-    
+
     /** @var Logger */
     private $logger;
 
@@ -32,15 +32,17 @@ class RestClientBase
      * @param ApiHostDescriptionInterface $apiHostDescription
      * @param ApiMethodDescriptionInterface $apiMethod
      * @param array $options
+     * @param null $body
      * @return null
      */
     public function run(
         ApiHostDescriptionInterface $apiHostDescription,
         ApiMethodDescriptionInterface $apiMethod,
-        array $options
+        array $options,
+        $body = null
     ) {
         $options = $this->prepareParameters($apiMethod, $options);
-        $response = $this->sendRequest($apiHostDescription, $apiMethod, $options);
+        $response = $this->sendRequest($apiHostDescription, $apiMethod, $options, $body);
         $result = $this->processResponse($apiHostDescription, $apiMethod, $response);
 
         return $result;
@@ -48,10 +50,10 @@ class RestClientBase
 
     /**
      * @param ApiMethodDescriptionInterface $apiMethod
-     * @param array $options
+     * @param array $queryParams
      * @return array
      */
-    protected function prepareParameters(ApiMethodDescriptionInterface $apiMethod, array $options)
+    protected function prepareParameters(ApiMethodDescriptionInterface $apiMethod, array $queryParams)
     {
         $optionsResolver = new OptionsResolver();
         $optionsResolver->setDefaults($apiMethod->getDefaultParameters());
@@ -62,21 +64,23 @@ class RestClientBase
             $optionsResolver->setAllowedValues($option, $values);
         }
 
-        return $optionsResolver->resolve($options);
+        return $optionsResolver->resolve($queryParams);
     }
 
     /**
-     * @param ApiHostDescriptionInterface $apiHostDescription
+     * @param ApiHostDescriptionInterface $apiHost
      * @param ApiMethodDescriptionInterface $apiMethod
      * @param array $options
+     * @param $body
      * @return mixed|\Psr\Http\Message\ResponseInterface
      */
     protected function sendRequest(
-        ApiHostDescriptionInterface $apiHostDescription,
+        ApiHostDescriptionInterface $apiHost,
         ApiMethodDescriptionInterface $apiMethod,
-        array $options
+        array $options,
+        $body
     ) {
-        $client = new Client(['base_uri' => $apiHostDescription->getUrl()]);
+        $client = new Client(['base_uri' => $apiHost->getUrl()]);
         $request = new Request(
             $apiMethod->getHttpMethod(),
             $apiMethod->getUri()
@@ -84,10 +88,26 @@ class RestClientBase
         $response = $client->send(
             $request,
             [
-//                'timeout' => 2,
                 'query' => $options,
+                'body' => (null != $body) ?
+                    $this->serializer->serialize($body, $apiHost->getDataFormat()) :
+                    null,
             ]
         );
+
+        $this->logger->info(
+            sprintf(
+                '%s - %s    |=>    %s',
+                $apiHost->getUrl() . $request->getUri(),
+                http_build_query($options, null, ', '),
+                $response->getBody()->getContents()
+            ),
+            array(
+                $response->getStatusCode(),
+                $response->getReasonPhrase(),
+            )
+        );
+        $response->getBody()->rewind();
 
         return $response;
     }
@@ -103,12 +123,13 @@ class RestClientBase
         ApiMethodDescriptionInterface $apiMethod,
         $response
     ) {
-        $responseBody = $response->getBody()->getContents();
-        if ($processed = $apiHostDescription->preDeserialize($responseBody)) {
-            $responseBody = $processed;
-        }
+        $content = $response->getBody()->getContents();
+        $response->getBody()->rewind();
+
+        $processed = $apiHostDescription->preDeserialize($content);
+
         $result = $this->serializer->deserialize(
-            $responseBody,
+            $processed,
             $apiMethod->getResultModelType(),
             $apiHostDescription->getDataFormat()
         );

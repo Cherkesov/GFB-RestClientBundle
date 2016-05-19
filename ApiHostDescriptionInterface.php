@@ -17,8 +17,8 @@ interface ApiHostDescriptionInterface
     public function getDataFormat();
 
     /**
-     * @param string $rawData
+     * @param string $content
      * @return string
      */
-    public function preDeserialize($rawData);
+    public function preDeserialize($content);
 }

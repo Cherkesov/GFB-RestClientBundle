@@ -2,6 +2,7 @@
 namespace GFB\RestClientBundle\Rest\Vkontakte;
 
 use GFB\RestClientBundle\AbstractApiHostDescription;
+use GuzzleHttp\Psr7\Stream;
 
 class VkontakteApiDescription extends AbstractApiHostDescription
 {
@@ -22,11 +23,11 @@ class VkontakteApiDescription extends AbstractApiHostDescription
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    public function preDeserialize($rawData)
+    public function preDeserialize($content)
     {
-        $rawData = json_decode($rawData, true)['response'];
-        return json_encode($rawData);
+        $content = json_decode($content, true)['response'];
+        return json_encode($content);
     }
 }

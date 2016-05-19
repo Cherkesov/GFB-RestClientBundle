@@ -27,7 +27,8 @@ class DefaultController extends Controller
             array(
                 'user_ids' => ['199177108', 'zveroflow', 'life_partner', 'holodnyi_veter'],
                 'fields' => ['photo_50', 'photo_200', 'city', 'verified'],
-            )
+            ),
+            null
         );
 
         dump($users);

@@ -4,8 +4,7 @@ namespace GFB\RestClientBundle;
 abstract class AbstractApiHostDescription implements ApiHostDescriptionInterface
 {
     /**
-     * @param string $rawData
-     * @return string
+     * @inheritdoc
      */
     public function preDeserialize($rawData)
     {
