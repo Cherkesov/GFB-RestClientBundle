@@ -2,6 +2,7 @@
 namespace GFB\RestClientBundle\Controller;
 
 use GFB\RestClientBundle\Rest\Vkontakte\Method\UsersGet;
+use GFB\RestClientBundle\Rest\Vkontakte\Method\UsersSearch;
 use GFB\RestClientBundle\Rest\Vkontakte\VkontakteApiDescription;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -21,6 +22,7 @@ class DefaultController extends Controller
     public function indexAction()
     {
         $vk = $this->get('gfb.rest_client.base');
+
         $users = $vk->run(
             new VkontakteApiDescription(),
             new UsersGet(),
@@ -30,8 +32,18 @@ class DefaultController extends Controller
             ),
             null
         );
-
         dump($users);
+
+        /*$users = $vk->run(
+            new VkontakteApiDescription(),
+            new UsersSearch(),
+            array(
+                'q' => 'Иванов Петр',
+            ),
+            null
+        );
+        dump($users);*/
+
         die();
 
         return new Response(

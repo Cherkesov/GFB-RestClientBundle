@@ -27,7 +27,12 @@ class VkontakteApiDescription extends AbstractApiHostDescription
      */
     public function preDeserialize($content)
     {
-        $content = json_decode($content, true)['response'];
+        $content = json_decode($content, true);
+        if (isset($content['response'])) {
+            $content = $content['response'];
+        }
+
+
         return json_encode($content);
     }
 }

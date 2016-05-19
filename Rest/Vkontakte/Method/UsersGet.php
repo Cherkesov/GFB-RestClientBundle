@@ -1,6 +1,7 @@
 <?php
 namespace GFB\RestClientBundle\Rest\Vkontakte\Method;
 
+
 use GFB\RestClientBundle\ApiMethodDescriptionInterface;
 
 class UsersGet implements ApiMethodDescriptionInterface
@@ -28,7 +29,7 @@ class UsersGet implements ApiMethodDescriptionInterface
     {
         return array(
             'user_ids' => null,
-            'fields' => 'photo_50,city,verified',
+            'fields' => ['photo_50', 'city', 'verified'],
             'name_case' => 'nom',
         );
     }
@@ -125,5 +126,6 @@ class UsersGet implements ApiMethodDescriptionInterface
     public function getResultModelType()
     {
         return 'array<GFB\RestClientBundle\Rest\Vkontakte\Model\User>';
+//        return 'GFB\RestClientBundle\Rest\Vkontakte\Model\Response';
     }
 }

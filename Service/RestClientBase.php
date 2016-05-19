@@ -29,21 +29,21 @@ class RestClientBase
     }
 
     /**
-     * @param ApiHostDescriptionInterface $apiHostDescription
+     * @param ApiHostDescriptionInterface $apiHost
      * @param ApiMethodDescriptionInterface $apiMethod
      * @param array $options
      * @param null $body
      * @return null
      */
     public function run(
-        ApiHostDescriptionInterface $apiHostDescription,
+        ApiHostDescriptionInterface $apiHost,
         ApiMethodDescriptionInterface $apiMethod,
         array $options,
         $body = null
     ) {
         $options = $this->prepareParameters($apiMethod, $options);
-        $response = $this->sendRequest($apiHostDescription, $apiMethod, $options, $body);
-        $result = $this->processResponse($apiHostDescription, $apiMethod, $response);
+        $response = $this->sendRequest($apiHost, $apiMethod, $options, $body);
+        $result = $this->processResponse($apiHost, $apiMethod, $response);
 
         return $result;
     }
@@ -71,7 +71,7 @@ class RestClientBase
      * @param ApiHostDescriptionInterface $apiHost
      * @param ApiMethodDescriptionInterface $apiMethod
      * @param array $options
-     * @param $body
+     * @param null|object $body
      * @return mixed|\Psr\Http\Message\ResponseInterface
      */
     protected function sendRequest(
@@ -113,25 +113,25 @@ class RestClientBase
     }
 
     /**
-     * @param ApiHostDescriptionInterface $apiHostDescription
+     * @param ApiHostDescriptionInterface $apiHost
      * @param ApiMethodDescriptionInterface $apiMethod
      * @param mixed|\Psr\Http\Message\ResponseInterface $response
      * @return array|mixed|object
      */
     protected function processResponse(
-        ApiHostDescriptionInterface $apiHostDescription,
+        ApiHostDescriptionInterface $apiHost,
         ApiMethodDescriptionInterface $apiMethod,
         $response
     ) {
         $content = $response->getBody()->getContents();
         $response->getBody()->rewind();
 
-        $processed = $apiHostDescription->preDeserialize($content);
+        $processed = $apiHost->preDeserialize($content);
 
         $result = $this->serializer->deserialize(
             $processed,
             $apiMethod->getResultModelType(),
-            $apiHostDescription->getDataFormat()
+            $apiHost->getDataFormat()
         );
 
         return $result;
