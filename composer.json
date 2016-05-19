@@ -1,6 +1,7 @@
 {
   "name": "gfb/rest-client-bundle",
   "type": "symfony-bundle",
+  "description": "",
   "license": "MIT",
   "authors": [
     {

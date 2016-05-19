@@ -7,30 +7,35 @@ class User
 {
     /**
      * @var integer
+     * @Serialize\SerializedName("id")
+     * @Serialize\Type(name="integer")
      */
     private $id;
 
     /**
      * @var string
      * @Serialize\SerializedName("first_name")
+     * @Serialize\Type(name="string")
      */
     private $firstName;
 
     /**
      * @var string
      * @Serialize\SerializedName("last_name")
+     * @Serialize\Type(name="string")
      */
     private $lastName;
 
     /**
      * @var City
-     * @Serialize\Type("\GFB\RestClientBundle\Rest\Vkontakte\Model\City")
+     * @Serialize\Type("GFB\RestClientBundle\Rest\Vkontakte\Model\City")
      */
     private $city;
 
     /**
      * @var string
      * @Serialize\SerializedName("photo_50")
+     * @Serialize\Type(name="string")
      */
     private $photo50;
 

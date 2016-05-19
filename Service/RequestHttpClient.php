@@ -10,6 +10,7 @@ namespace GFB\RestClientBundle\Service;
 
 
 use GFB\RestClientBundle\ApiMethodDescriptionInterface;
+use JMS\Serializer\Serializer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -18,14 +19,14 @@ abstract class RequestHttpClient
     const DATA_FORMAT_JSON = 'json';
     const DATA_FORMAT_XML = 'xml';
 
-    /** @var SerializerInterface */
+    /** @var Serializer */
     private $serializer;
 
     /**
      * RequestHttpClient constructor.
-     * @param SerializerInterface $serializer
+     * @param Serializer $serializer
      */
-    public function __construct(SerializerInterface $serializer)
+    public function __construct(Serializer $serializer)
     {
         $this->serializer = $serializer;
     }
@@ -43,29 +44,40 @@ abstract class RequestHttpClient
     public function run(ApiMethodDescriptionInterface $apiMethod, array $options)
     {
         $optionsResolver = new OptionsResolver();
+        $optionsResolver->setDefaults($apiMethod->getDefaultParameters());
 
         foreach ($apiMethod->getParametersAllowedTypes() as $option => $types) {
             $optionsResolver->setAllowedTypes($option, $types);
         }
 
-        $optionsResolver->setDefaults($apiMethod->getDefaultParameters());
         $optionsResolver->resolve($options);
 
         // TODO: do request to remote API
 
         $rawData = <<<DATA
-response: [{
-    id: 205387401,
-    first_name: 'Tom',
-    last_name: 'Cruise',
-    city: {
-        id: 5331,
-        title: 'Los Angeles'
-    },
-    photo_50: 'https://pp.vk.me/...760/pV6sZ5wRGxE.jpg',
-    verified: 1
-}]
+{
+    "response":[
+        {
+            "id":205387401,
+            "first_name":"Tom",
+            "last_name":"Cruise",
+            "city":{"id":5331,"title":"Los Angeles"},
+            "photo_50":"https:\/\/pp.vk.me\/c402330\/v402330401\/9760\/pV6sZ5wRGxE.jpg",
+            "verified":0
+        },
+        {
+            "id":123,
+            "first_name":"Vasya",
+            "last_name":"Vasilev",
+            "city":{"id":5331,"title":"Los Angeles"},
+            "photo_50":"https:\/\/pp.vk.me\/c402330\/v402330401\/9760\/pV6sZ5wRGxE.jpg",
+            "verified":0
+        }
+    ]
+}
 DATA;
+        $rawData = json_decode($rawData, true)['response'];
+        $rawData = json_encode($rawData);
 
         $result = $this->serializer->deserialize(
             $rawData,

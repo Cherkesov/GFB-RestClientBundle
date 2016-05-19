@@ -1,6 +1,7 @@
 <?php
 namespace GFB\RestClientBundle\Controller;
 
+use GFB\RestClientBundle\Rest\Vkontakte\Method\UsersGet;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,13 +19,25 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return new Response(<<<HTML
-<html>
+        $vk = $this->get('gfb.rest_client.vkontakte');
+        $users = $vk->run(
+            new UsersGet(),
+            array(
+                'user_ids' => '199177108',
+            )
+        );
+
+        dump($users);
+        die();
+
+        return new Response(
+            <<<HTML
+            <html>
 <body>
     <div>You must not see this text! This letter for Hogwards pupils!</div>
 </body>
 </html>
 HTML
-    );
+        );
     }
 }

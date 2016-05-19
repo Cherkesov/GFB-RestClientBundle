@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: scherk01
- * Date: 18.05.2016
- * Time: 16:30
- */
-
 namespace GFB\RestClientBundle\Rest\Vkontakte\Model;
 
 use JMS\Serializer\Annotation as Serialize;
@@ -14,11 +7,13 @@ class City
 {
     /**
      * @var integer
+     * @Serialize\Type(name="integer")
      */
     private $id;
 
     /**
      * @var string
+     * @Serialize\Type(name="string")
      */
     private $title;
 

@@ -12,3 +12,8 @@ services:
 #        class: GFB\RestClientBundle\Service\RequestHttpClient
 #        arguments:
 #            - @serializer
+
+    gfb.rest_client.vkontakte:
+        class: GFB\RestClientBundle\Rest\Vkontakte\VkontakteRestClient
+        arguments:
+            - @serializer
